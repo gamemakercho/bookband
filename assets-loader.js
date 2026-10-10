@@ -69,11 +69,18 @@ export function drawCart(ctx, bundle) {
   if (!bundle.cartImage) return;
   drawSprite(ctx, bundle.cartImage, bundle.cart.content_rect, bundle.layout.cart.dest_content_rect);
 }
+export function drawCartForeground(ctx,bundle) {
+  const clips=bundle.layout.cart.foreground_clip_rects;
+  if(!bundle.cartImage||!clips?.length)return;
+  ctx.save();ctx.beginPath();clips.forEach(rect=>ctx.rect(...rect));ctx.clip();
+  drawCart(ctx,bundle);ctx.restore();
+}
 export function drawIdlePaws(ctx, bundle, hideSide = null) {
   if (!bundle.pawImage) return;
   const p = bundle.layout.idle_paws;
-  [["idle_left", p.left_dest, [0,1480,67,192]],
-   ["idle_right", p.right_dest, [874,1480,67,192]]].forEach(([id, dest, clip]) => {
+  const clips=p.visible_clip_rects||[[0,0,...bundle.layout.design_size],[0,0,...bundle.layout.design_size]];
+  [["idle_left", p.left_dest, clips[0]],
+   ["idle_right", p.right_dest, clips[1]]].forEach(([id, dest, clip]) => {
     if (id === "idle_" + hideSide) return;
     ctx.save(); ctx.beginPath(); ctx.rect(...clip); ctx.clip();
     drawSprite(ctx, bundle.pawImage, bundle.pawFrames.get(id).content_rect, dest);
@@ -84,19 +91,15 @@ export function drawGripPaws(ctx, bundle, bookPlacement) {
   if (!bundle.pawImage) return;
   const [cx, cy] = bookPlacement.center;
   const [bw] = bookPlacement.size;
-  const y = cy + 30, leftX = cx - bw/2 - 108, rightX = cx + bw/2 - 6;
-  const armFrame = bundle.pawFrames.get("forearm_connector");
-  const r = armFrame.content_rect;
-  const stretchRect = [r[0]+80, r[1], r[2]-160, r[3]];
+  const settings=bundle.layout.grip_paws||{};
+  const width=settings.width||135,overlap=settings.book_overlap||6,y=cy+(settings.y_offset||30);
   const side = bookPlacement.grip_side || (cx >= 470.5 ? "right" : "left");
   drawIdlePaws(ctx, bundle, side);
-  if (side === "left") {
-    if (leftX > 0) drawSprite(ctx, bundle.pawImage, stretchRect, [0, y+20, leftX+3, 33]);
-    drawSprite(ctx, bundle.pawImage, bundle.pawFrames.get("grip_left").content_rect, [leftX,y,115,65]);
-  } else {
-    if (rightX+115 < 941) drawSprite(ctx, bundle.pawImage, stretchRect, [rightX+112, y+20, 941-rightX-112, 33]);
-    drawSprite(ctx, bundle.pawImage, bundle.pawFrames.get("grip_right").content_rect, [rightX,y,115,65]);
-  }
+  const rect=bundle.pawFrames.get("grip_"+side).content_rect;
+  const height=width*rect[3]/rect[2];
+  const x=side==='left'?cx-bw/2-width+overlap:cx+bw/2-overlap;
+  // Render the original hand and wrist at their natural aspect ratio. No stretched forearm.
+  drawSprite(ctx,bundle.pawImage,rect,[x,y,width,height]);
 }
 function textFit(ctx, text, x, y, initial, maxWidth, color="#fff1b4") {
   let size=initial;
@@ -111,7 +114,7 @@ export function drawUi(ctx, bundle) {
   textFit(ctx,"신간도서 코너",470,565,38,320,"#18243f");
   const s=bundle.layout.shelf;
   for(let i=0;i<10;i++)textFit(ctx,String(i+1),s.left+(i+.5)*(s.right-s.left)/10,s.number_baseline,28,60,"#18130d");
-  const footer=bundle.mode==="reshelve"?"끌어서 꽂기 · 두 권을 누르면 자리 바꾸기":"두 책을 차례로 누르면 자리가 바뀌어요";
+  const footer=bundle.mode==="reshelve"?"끌어서 꽂기 · 찬 자리에는 밀어 넣기":"두 책을 차례로 누르면 자리가 바뀌어요";
   textFit(ctx,footer,470,1647,27,760,"#ffd7ee");
 }
 export function drawSparkles(ctx,bundle) {
@@ -131,8 +134,9 @@ export function renderAssetPreview(ctx,bundle,state="initial"){
     drawShelf(ctx,bundle,bundle.books.frames.map(f=>f.id));
     if(bundle.mode==="reshelve"){drawCart(ctx,bundle);drawIdlePaws(ctx,bundle);}
   }else if(bundle.mode==="reshelve"){
-    order.forEach((id,i)=>{if(state==="held"&&id==="500")return;drawBook(ctx,bundle,id,bundle.layout.cart_book_samples[i]);});
     drawCart(ctx,bundle);
+    order.forEach((id,i)=>{if(state==="held"&&id==="500")return;drawBook(ctx,bundle,id,bundle.layout.cart_book_samples[i]);});
+    drawCartForeground(ctx,bundle);
     if(state==="held"){
       const held={center:[690,724],size:bundle.layout.held_book_size,rotation_deg:0,grip_side:"right"};
       drawBook(ctx,bundle,"500",held);drawGripPaws(ctx,bundle,held);

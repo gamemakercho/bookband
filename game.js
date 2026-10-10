@@ -1,6 +1,6 @@
 import {CONFIG} from './config.js';
-import {loadAssetBundle,drawBook,drawCart,drawIdlePaws,drawGripPaws} from './assets-loader.js';
-import {freshState,validState,locate,transition} from './state.js';
+import {loadAssetBundle,drawBook,drawCart,drawCartForeground,drawIdlePaws,drawGripPaws} from './assets-loader.js';
+import {freshState,validState,locate,transition,shelfDropPlan} from './state.js';
 import {inside,localPoint,slotAt,shelfPlacement} from './geometry.js';
 
 const canvas=document.querySelector('#board'),ctx=canvas.getContext('2d');
@@ -39,7 +39,8 @@ function hitBook(p,includeHeld=true) {
   // Shelf hit regions include the full spine, even transparent rounded corners.
   for(let i=0;i<order.length;i++)if(state.shelf[i]) {const q=shelfPlacement(bundle.layout,i);if(inside(localPoint(p,q),[0,0,...q.size]))return state.shelf[i];}
   const r=bundle.layout.cart.dest_content_rect;
-  if(opaque(cartMask,[p[0]-r[0],p[1]-r[1]],[r[2],r[3]]))return null;
+  const cartFront=bundle.layout.cart.foreground_clip_rects||[];
+  if(cartFront.some(rect=>inside(p,rect))&&opaque(cartMask,[p[0]-r[0],p[1]-r[1]],[r[2],r[3]]))return null;
   // Traverse back to front and use actual sprite alpha, so covered books are not grabbed through another book/cart.
   for(let i=state.cart.length-1;i>=0;i--) {const id=state.cart[i];if(!id||id===selected?.id)continue;const q=bundle.layout.cart_book_samples[i];if(opaque(bookMasks.get(id),localPoint(p,q),q.size))return id;}
   return null;
@@ -58,7 +59,7 @@ function tap(p,hit=hitBook(p)) {
   if(!active())return;
   if(hit) {
     if(selected?.id===hit){selected=null;render();syncAccess();return;}
-    if(selected&&locate(state,selected.id).zone==='shelf'&&locate(state,hit).zone==='shelf') {commit({type:'swap',id:selected.id,otherId:hit});return;}
+    if(selected&&locate(state,hit).zone==='shelf') {commit({type:'move',id:selected.id,zone:'shelf',index:locate(state,hit).index});return;}
     select(hit,p);return;
   }
   if(selected) {
@@ -112,10 +113,11 @@ function render(now=performance.now()) {
   state.shelf.forEach((id,i)=>{if(id&&id!==heldId)drawBook(ctx,bundle,id,shelfPlacement(l,i));});
   if(heldId) {
     for(let i=0;i<order.length;i++)if(!state.shelf[i]) {const q=shelfPlacement(l,i);ctx.fillStyle='#fff2c615';ctx.fillRect(q.center[0]-q.size[0]/2,q.center[1]-q.size[1]/2,...q.size);}
-    if(gesture?.dragging){const n=slotAt(gesture.point,l);if(n>=0&&(!state.shelf[n]||state.shelf[n]===heldId))outline(shelfPlacement(l,n));}
+    if(gesture?.dragging){const n=slotAt(gesture.point,l);if(n>=0&&shelfDropPlan(state,heldId,n))outline(shelfPlacement(l,n));}
   }
-  state.cart.forEach((id,i)=>{if(id&&id!==heldId)drawBook(ctx,bundle,id,l.cart_book_samples[i]);});
   drawCart(ctx,bundle);
+  state.cart.forEach((id,i)=>{if(id&&id!==heldId)drawBook(ctx,bundle,id,l.cart_book_samples[i]);});
+  drawCartForeground(ctx,bundle);
   if(heldId){const q=heldPlacement();drawBook(ctx,bundle,heldId,q);outline(q);drawGripPaws(ctx,bundle,q);}else drawIdlePaws(ctx,bundle);
   // The exact title is split into two lines within the blank header panel.
   const [hx,hy]=l.header_title_center;
