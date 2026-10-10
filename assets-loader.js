@@ -25,9 +25,9 @@ function readImage(primary, fallback) {
 }
 export async function loadAssetBundle(mode = "reshelve") {
   const [layout, books, background, bookImage] = await Promise.all([
-    readJson("layout.json"), readJson("assets/books-atlas.json"),
+    readJson("layout.json"), readJson("assets/books-atlas-crisp-v2.json"),
     readImage("assets/library-background.webp", "assets/library-background.png"),
-    readImage("assets/books-atlas.webp", "assets/books-atlas.png")
+    readImage("assets/books-atlas-crisp-v2.png")
   ]);
   const bundle = { mode, layout, books, background, bookImage,
     bookFrames: new Map(books.frames.map(frame => [frame.id, frame])) };
@@ -51,9 +51,27 @@ export function drawBook(ctx, bundle, id, placement) {
   const center = placement.center;
   const size = placement.size;
   ctx.save();
+  // Sample the original atlas once at the final device resolution, including rotations.
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.translate(center[0], center[1]);
   ctx.rotate((placement.rotation_deg || 0) * Math.PI / 180);
   drawSprite(ctx, bundle.bookImage, frame.content_rect, [-size[0]/2, -size[1]/2, size[0], size[1]]);
+  ctx.restore();
+}
+export function drawBookGlow(ctx, silhouette, placement, cssScale) {
+  if (!silhouette) return;
+  const [w,h]=placement.size, radius=1/Math.max(cssScale,.1);
+  ctx.save();ctx.translate(...placement.center);
+  ctx.rotate((placement.rotation_deg||0)*Math.PI/180);
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+  // Source-alpha silhouette cached once. The next book draw covers its interior.
+  // The cart foreground subsequently covers both the glow and the book.
+  ctx.globalAlpha=.14;ctx.shadowColor='#fff1b7';ctx.shadowBlur=2;
+  for(let i=0;i<12;i++){
+    const angle=i*Math.PI/6;
+    ctx.drawImage(silhouette,-w/2+Math.cos(angle)*radius,-h/2+Math.sin(angle)*radius,w,h);
+  }
   ctx.restore();
 }
 export function shelfPlacement(bundle, index) {

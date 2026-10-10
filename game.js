@@ -1,7 +1,7 @@
 import {CONFIG} from './config.js';
-import {loadAssetBundle,drawBook,drawCart,drawCartForeground,drawIdlePaws,drawGripPaws} from './assets-loader.js';
+import {loadAssetBundle,drawBook,drawBookGlow,drawCart,drawCartForeground,drawIdlePaws,drawGripPaws} from './assets-loader.js';
 import {freshState,validState,locate,transition,shelfDropPlan} from './state.js';
-import {inside,localPoint,slotAt,shelfPlacement} from './geometry.js';
+import {inside,localPoint,slotAt,shelfPlacement,cartPlacements} from './geometry.js';
 
 const canvas=document.querySelector('#board'),ctx=canvas.getContext('2d');
 const message=document.querySelector('#message'),intro=document.querySelector('#intro');
@@ -17,16 +17,20 @@ function readSave() {
   return null;
 }
 function save() {try {localStorage.setItem(CONFIG.storageKey,JSON.stringify(state));}catch{/* Private mode/quota: retain in-memory state. */}}
-function maskFor(image,rect) {
+function maskFor(image,rect,glow=false) {
   const c=document.createElement('canvas');c.width=rect[2];c.height=rect[3];const x=c.getContext('2d',{willReadFrequently:true});
-  x.drawImage(image,...rect,0,0,c.width,c.height);return {data:x.getImageData(0,0,c.width,c.height).data,w:c.width,h:c.height};
+  x.drawImage(image,...rect,0,0,c.width,c.height);
+  const mask={data:x.getImageData(0,0,c.width,c.height).data,w:c.width,h:c.height};
+  if(glow){x.globalCompositeOperation='source-in';x.fillStyle='#fff1b7';x.fillRect(0,0,c.width,c.height);mask.silhouette=c;}
+  return mask;
 }
 function opaque(mask,point,size) {
   if(!mask||point[0]<0||point[1]<0||point[0]>=size[0]||point[1]>=size[1])return false;
   const x=Math.min(mask.w-1,Math.floor(point[0]/size[0]*mask.w)),y=Math.min(mask.h-1,Math.floor(point[1]/size[1]*mask.h));
   return mask.data[(y*mask.w+x)*4+3]>35;
 }
-function placement(id) {const p=locate(state,id);return p.zone==='shelf'?shelfPlacement(bundle.layout,p.index):bundle.layout.cart_book_samples[p.index];}
+function cartPositions(){return cartPlacements(bundle.layout,state.cart,gesture?.dragging?gesture.book:selected?.id);}
+function placement(id) {const p=locate(state,id);return p.zone==='shelf'?shelfPlacement(bundle.layout,p.index):cartPositions()[p.index];}
 function heldPlacement() {
   if(!selected&&!gesture?.dragging)return null;
   const id=gesture?.dragging?gesture.book:selected.id;
@@ -42,7 +46,8 @@ function hitBook(p,includeHeld=true) {
   const cartFront=bundle.layout.cart.foreground_clip_rects||[];
   if(cartFront.some(rect=>inside(p,rect))&&opaque(cartMask,[p[0]-r[0],p[1]-r[1]],[r[2],r[3]]))return null;
   // Traverse back to front and use actual sprite alpha, so covered books are not grabbed through another book/cart.
-  for(let i=state.cart.length-1;i>=0;i--) {const id=state.cart[i];if(!id||id===selected?.id)continue;const q=bundle.layout.cart_book_samples[i];if(opaque(bookMasks.get(id),localPoint(p,q),q.size))return id;}
+  const positions=cartPositions();
+  for(let i=state.cart.length-1;i>=0;i--) {const id=state.cart[i];if(!id||id===selected?.id)continue;const q=positions[i];if(opaque(bookMasks.get(id),localPoint(p,q),q.size))return id;}
   return null;
 }
 function toPoint(e) {const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)/r.width*941,(e.clientY-r.top)/r.height*1672];}
@@ -106,9 +111,22 @@ function fit(text,x,y,size,maxWidth,color='#fff1b4') {
 function outline(q,color='#fff0a3') {
   ctx.save();ctx.translate(...q.center);ctx.rotate((q.rotation_deg||0)*Math.PI/180);ctx.strokeStyle=color;ctx.lineWidth=4;ctx.setLineDash([12,6]);ctx.strokeRect(-q.size[0]/2-3,-q.size[1]/2-3,q.size[0]+6,q.size[1]+6);ctx.restore();
 }
+function resizeCanvas() {
+  const rect=canvas.getBoundingClientRect(),dpr=Math.min(3,Math.max(1,window.devicePixelRatio||1));
+  if(!rect.width||!rect.height)return;
+  const width=Math.max(1,Math.round(rect.width*dpr)),height=Math.max(1,Math.round(rect.height*dpr));
+  if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
+}
+window.addEventListener('resize',()=>render());
+window.visualViewport?.addEventListener('resize',()=>render());
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(()=>render()).observe(canvas);
 function render(now=performance.now()) {
   if(!bundle||!state)return;
-  const l=bundle.layout;ctx.imageSmoothingEnabled=false;ctx.clearRect(0,0,941,1672);ctx.drawImage(bundle.background,0,0,941,1672);
+  resizeCanvas();
+  // Reset before each render. Pointer coordinates stay in the 941 × 1672 design space.
+  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.setTransform(canvas.width/941,0,0,canvas.height/1672,0,0);
+  const l=bundle.layout;ctx.imageSmoothingEnabled=false;ctx.drawImage(bundle.background,0,0,941,1672);
   const heldId=gesture?.dragging?gesture.book:selected?.id;
   state.shelf.forEach((id,i)=>{if(id&&id!==heldId)drawBook(ctx,bundle,id,shelfPlacement(l,i));});
   if(heldId) {
@@ -116,7 +134,11 @@ function render(now=performance.now()) {
     if(gesture?.dragging){const n=slotAt(gesture.point,l);if(n>=0&&shelfDropPlan(state,heldId,n))outline(shelfPlacement(l,n));}
   }
   drawCart(ctx,bundle);
-  state.cart.forEach((id,i)=>{if(id&&id!==heldId)drawBook(ctx,bundle,id,l.cart_book_samples[i]);});
+  const positions=cartPositions(),cssScale=canvas.getBoundingClientRect().width/941;
+  state.cart.forEach((id,i)=>{if(id&&id!==heldId){
+    drawBookGlow(ctx,bookMasks.get(id).silhouette,positions[i],cssScale);
+    drawBook(ctx,bundle,id,positions[i]);
+  }});
   drawCartForeground(ctx,bundle);
   if(heldId){const q=heldPlacement();drawBook(ctx,bundle,heldId,q);outline(q);drawGripPaws(ctx,bundle,q);}else drawIdlePaws(ctx,bundle);
   // The exact title is split into two lines within the blank header panel.
@@ -176,7 +198,7 @@ document.querySelector('#retry').onclick=()=>location.reload();
 try {
   bundle=await loadAssetBundle('reshelve');
   if(order.length!==bundle.layout.shelf.slot_count||new Set(order).size!==order.length||!order.every(id=>bundle.bookFrames.has(id))||bundle.layout.cart_book_samples.length!==order.length)throw new Error('책 또는 배치 데이터가 맞지 않습니다.');
-  for(const id of order)bookMasks.set(id,maskFor(bundle.bookImage,bundle.bookFrames.get(id).content_rect));
+  for(const id of order)bookMasks.set(id,maskFor(bundle.bookImage,bundle.bookFrames.get(id).content_rect,true));
   cartMask=maskFor(bundle.cartImage,bundle.cart.content_rect);
   const restored=readSave();state=restored||freshState(order,CONFIG.gameId);started=!!restored;completionSent=!!restored?.complete;completionStart=performance.now()-bundle.layout.sparkle.duration_ms;
   loading.hidden=true;intro.hidden=started;ready=true;render();syncAccess();

@@ -1,0 +1,312 @@
+{
+  "schema_version": 2,
+  "image": "books-atlas-crisp-v2.png",
+  "canvas_size": [
+    1374,
+    1145
+  ],
+  "rect_format": "x,y,width,height in source pixels",
+  "frames": [
+    {
+      "id": "000",
+      "name_ko": "총류",
+      "band_color_ko": "초록",
+      "correct_slot_index": 0,
+      "rect": [
+        56,
+        29,
+        200,
+        531
+      ],
+      "content_rect": [
+        68,
+        41,
+        176,
+        507
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        176,
+        507
+      ],
+      "anchor_in_rect": [
+        100.0,
+        519
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    },
+    {
+      "id": "100",
+      "name_ko": "철학",
+      "band_color_ko": "빨강",
+      "correct_slot_index": 1,
+      "rect": [
+        317,
+        29,
+        202,
+        531
+      ],
+      "content_rect": [
+        329,
+        41,
+        178,
+        507
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        178,
+        507
+      ],
+      "anchor_in_rect": [
+        101.0,
+        519
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    },
+    {
+      "id": "200",
+      "name_ko": "종교",
+      "band_color_ko": "회색",
+      "correct_slot_index": 2,
+      "rect": [
+        586,
+        29,
+        201,
+        531
+      ],
+      "content_rect": [
+        598,
+        41,
+        177,
+        507
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        177,
+        507
+      ],
+      "anchor_in_rect": [
+        100.5,
+        519
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    },
+    {
+      "id": "300",
+      "name_ko": "사회과학",
+      "band_color_ko": "주황",
+      "correct_slot_index": 3,
+      "rect": [
+        854,
+        29,
+        203,
+        531
+      ],
+      "content_rect": [
+        866,
+        41,
+        179,
+        507
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        179,
+        507
+      ],
+      "anchor_in_rect": [
+        101.5,
+        519
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    },
+    {
+      "id": "400",
+      "name_ko": "자연과학",
+      "band_color_ko": "갈색",
+      "correct_slot_index": 4,
+      "rect": [
+        1120,
+        29,
+        204,
+        531
+      ],
+      "content_rect": [
+        1132,
+        41,
+        180,
+        507
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        180,
+        507
+      ],
+      "anchor_in_rect": [
+        102.0,
+        519
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    },
+    {
+      "id": "500",
+      "name_ko": "기술과학",
+      "band_color_ko": "하늘색",
+      "correct_slot_index": 5,
+      "rect": [
+        52,
+        588,
+        209,
+        529
+      ],
+      "content_rect": [
+        64,
+        600,
+        185,
+        505
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        185,
+        505
+      ],
+      "anchor_in_rect": [
+        104.5,
+        517
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    },
+    {
+      "id": "600",
+      "name_ko": "예술",
+      "band_color_ko": "노랑",
+      "correct_slot_index": 6,
+      "rect": [
+        313,
+        588,
+        208,
+        528
+      ],
+      "content_rect": [
+        325,
+        600,
+        184,
+        504
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        184,
+        504
+      ],
+      "anchor_in_rect": [
+        104.0,
+        516
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    },
+    {
+      "id": "700",
+      "name_ko": "언어",
+      "band_color_ko": "연두",
+      "correct_slot_index": 7,
+      "rect": [
+        582,
+        588,
+        208,
+        528
+      ],
+      "content_rect": [
+        594,
+        600,
+        184,
+        504
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        184,
+        504
+      ],
+      "anchor_in_rect": [
+        104.0,
+        516
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    },
+    {
+      "id": "800",
+      "name_ko": "문학",
+      "band_color_ko": "진한 파랑",
+      "correct_slot_index": 8,
+      "rect": [
+        853,
+        588,
+        208,
+        529
+      ],
+      "content_rect": [
+        865,
+        600,
+        184,
+        505
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        184,
+        505
+      ],
+      "anchor_in_rect": [
+        104.0,
+        517
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    },
+    {
+      "id": "900",
+      "name_ko": "역사",
+      "band_color_ko": "보라",
+      "correct_slot_index": 9,
+      "rect": [
+        1118,
+        588,
+        208,
+        529
+      ],
+      "content_rect": [
+        1130,
+        600,
+        184,
+        505
+      ],
+      "content_in_rect": [
+        12,
+        12,
+        184,
+        505
+      ],
+      "anchor_in_rect": [
+        104.0,
+        517
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas-crisp-v2.png"
+    }
+  ],
+  "render_note_ko": "새 PNG와 이 JSON을 한 쌍으로 사용합니다. 기존 books-atlas.json의 좌표는 재사용하지 마세요. 분류명은 이미지에 이미 있으므로 중복 표시하지 않습니다. 각 content_rect를 직접 목적지 해상도에 그리며, 책 축소 시 고품질 보간과 DPR을 적용합니다."
+}

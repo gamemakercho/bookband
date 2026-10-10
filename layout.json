@@ -22,14 +22,14 @@
   "shelf": {
     "left": 74,
     "right": 869,
-    "baseline": 833,
+    "baseline": 860,
     "book_height": 237,
     "slot_count": 10,
     "slot_width": 79.5,
     "number_baseline": 889,
     "drop_rect": [
       65,
-      570,
+      597,
       814,
       278
     ]
@@ -49,8 +49,8 @@
     ],
     "tray_baselines": [
       1115,
-      1298,
-      1494
+      1312,
+      1510
     ],
     "foreground_clip_rects": [
       [
@@ -119,114 +119,124 @@
   ],
   "cart_book_samples": [
     {
-      "center": [
-        166,
-        1031
-      ],
       "size": [
-        61,
-        164
+        57.24,
+        170.64
       ],
-      "rotation_deg": -5
+      "rotation_deg": 0,
+      "center": [
+        210,
+        1029.68
+      ]
     },
     {
-      "center": [
-        263,
-        1036
-      ],
       "size": [
-        59,
-        158
+        57.24,
+        170.64
       ],
-      "rotation_deg": 4
+      "rotation_deg": 0,
+      "center": [
+        290,
+        1029.68
+      ]
     },
     {
-      "center": [
-        363,
-        1033
-      ],
       "size": [
-        56,
-        164
+        57.24,
+        170.64
       ],
-      "rotation_deg": -3
+      "rotation_deg": 0,
+      "center": [
+        370,
+        1029.68
+      ]
     },
     {
-      "center": [
-        619,
-        1096
-      ],
+      "stack_baseline": 1115,
       "size": [
-        39,
-        168
+        57.24,
+        170.64
       ],
-      "rotation_deg": -90
+      "rotation_deg": -90,
+      "center": [
+        635,
+        1086.38
+      ],
+      "stack": "top"
     },
     {
-      "center": [
-        619,
-        1058
-      ],
+      "stack_baseline": 1115,
       "size": [
-        36,
-        173
+        57.24,
+        170.64
       ],
-      "rotation_deg": -90
+      "rotation_deg": -90,
+      "center": [
+        635,
+        1029.14
+      ],
+      "stack": "top"
     },
     {
-      "center": [
-        270,
-        1278
-      ],
+      "stack_baseline": 1312,
       "size": [
-        38,
-        186
+        57.24,
+        170.64
       ],
-      "rotation_deg": -90
+      "rotation_deg": -90,
+      "center": [
+        285,
+        1283.38
+      ],
+      "stack": "middle"
     },
     {
-      "center": [
-        268,
-        1242
-      ],
+      "stack_baseline": 1312,
       "size": [
-        34,
-        179
+        57.24,
+        170.64
       ],
-      "rotation_deg": -90
+      "rotation_deg": -90,
+      "center": [
+        285,
+        1226.14
+      ],
+      "stack": "middle"
     },
     {
-      "center": [
-        266,
-        1209
-      ],
+      "stack_baseline": 1312,
       "size": [
-        32,
-        172
+        57.24,
+        170.64
       ],
-      "rotation_deg": -90
+      "rotation_deg": -90,
+      "center": [
+        285,
+        1168.9
+      ],
+      "stack": "middle"
     },
     {
-      "center": [
-        622,
-        1237
-      ],
       "size": [
-        57,
-        121
+        57.24,
+        170.64
       ],
-      "rotation_deg": 9
+      "rotation_deg": 0,
+      "center": [
+        610,
+        1226.68
+      ]
     },
     {
-      "center": [
-        707,
-        1236
-      ],
       "size": [
-        61,
-        123
+        57.24,
+        170.64
       ],
-      "rotation_deg": -7
+      "rotation_deg": 0,
+      "center": [
+        690,
+        1226.68
+      ]
     }
   ],
   "swap": {

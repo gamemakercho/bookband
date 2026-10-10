@@ -12,3 +12,13 @@ export function shelfPlacement(layout,index) {
   const s=layout.shelf,w=(s.right-s.left)/s.slot_count;
   return {center:[s.left+(index+.5)*w,s.baseline-s.book_height/2],size:[w,s.book_height],rotation_deg:0};
 }
+export function cartPlacements(layout,cart,heldId=null) {
+  const slots=layout.cart_book_samples;
+  return slots.map((sample,i)=>{
+    if(!sample.stack)return sample;
+    // Close physical gaps inside a pile without changing state, ids or book order.
+    const below=slots.slice(0,i).filter((p,j)=>p.stack===sample.stack&&cart[j]&&cart[j]!==heldId);
+    const bottom=sample.stack_baseline-below.reduce((sum,p)=>sum+p.size[0],0);
+    return {...sample,center:[sample.center[0],bottom-sample.size[0]/2]};
+  });
+}
