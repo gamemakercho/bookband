@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "image": "cat-paws-atlas.webp",
+  "png_fallback": "cat-paws-atlas.png",
+  "canvas_size": [
+    1536,
+    1024
+  ],
+  "rect_format": "x,y,width,height in source image pixels",
+  "frames": [
+    {
+      "id": "idle_left",
+      "rect": [
+        59,
+        16,
+        484,
+        373
+      ],
+      "content_rect": [
+        67,
+        24,
+        468,
+        357
+      ],
+      "file": "cat-paws-atlas.webp",
+      "wrist_anchor_in_content": [
+        0,
+        357
+      ],
+      "corner": "bottom_left"
+    },
+    {
+      "id": "idle_right",
+      "rect": [
+        993,
+        15,
+        484,
+        374
+      ],
+      "content_rect": [
+        1001,
+        23,
+        468,
+        358
+      ],
+      "file": "cat-paws-atlas.webp",
+      "wrist_anchor_in_content": [
+        468,
+        358
+      ],
+      "corner": "bottom_right"
+    },
+    {
+      "id": "grip_left",
+      "rect": [
+        55,
+        404,
+        593,
+        340
+      ],
+      "content_rect": [
+        63,
+        412,
+        577,
+        324
+      ],
+      "file": "cat-paws-atlas.webp",
+      "wrist_anchor_in_content": [
+        0,
+        181.44000000000003
+      ],
+      "grip_anchor_in_content": [
+        569,
+        142.56
+      ],
+      "extends_to": "viewport_left"
+    },
+    {
+      "id": "grip_right",
+      "rect": [
+        889,
+        403,
+        592,
+        340
+      ],
+      "content_rect": [
+        897,
+        411,
+        576,
+        324
+      ],
+      "file": "cat-paws-atlas.webp",
+      "wrist_anchor_in_content": [
+        576,
+        181.44000000000003
+      ],
+      "grip_anchor_in_content": [
+        8,
+        142.56
+      ],
+      "extends_to": "viewport_right"
+    },
+    {
+      "id": "forearm_connector",
+      "rect": [
+        57,
+        788,
+        1425,
+        222
+      ],
+      "content_rect": [
+        65,
+        796,
+        1409,
+        206
+      ],
+      "file": "cat-paws-atlas.webp",
+      "stretch_axis": "horizontal",
+      "mirror_allowed": true
+    }
+  ],
+  "render_note_ko": "책 집어 꽂기 버전에서만 사용합니다. 기본 앞발은 화면 아래 구석에서 일부만 보이게 클리핑하고, 잡는 앞발과 연결용 앞다리로 손목이 화면 가장자리까지 이어지게 합니다."
+}

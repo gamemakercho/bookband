@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "image": "book-cart.webp",
+  "png_fallback": "book-cart.png",
+  "canvas_size": [
+    1536,
+    1024
+  ],
+  "content_rect": [
+    98,
+    47,
+    1340,
+    923
+  ],
+  "render_note_ko": "카트 안쪽 여백도 투명합니다. 책을 먼저 그리고 카트를 그려 선반 앞면이 책 밑부분을 자연스럽게 가리게 합니다."
+}

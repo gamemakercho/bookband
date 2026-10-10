@@ -1,0 +1,314 @@
+{
+  "schema_version": 1,
+  "image": "books-atlas.webp",
+  "png_fallback": "books-atlas.png",
+  "canvas_size": [
+    1374,
+    1145
+  ],
+  "rect_format": "x,y,width,height in source image pixels",
+  "indexing": "zero-based",
+  "frames": [
+    {
+      "id": "000",
+      "name_ko": "총류",
+      "band_color_ko": "초록",
+      "correct_slot_index": 0,
+      "rect": [
+        63,
+        34,
+        186,
+        516
+      ],
+      "content_rect": [
+        71,
+        42,
+        170,
+        500
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        170,
+        500
+      ],
+      "anchor_in_rect": [
+        93.0,
+        508
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    },
+    {
+      "id": "100",
+      "name_ko": "철학",
+      "band_color_ko": "빨강",
+      "correct_slot_index": 1,
+      "rect": [
+        324,
+        34,
+        188,
+        516
+      ],
+      "content_rect": [
+        332,
+        42,
+        172,
+        500
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        172,
+        500
+      ],
+      "anchor_in_rect": [
+        94.0,
+        508
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    },
+    {
+      "id": "200",
+      "name_ko": "종교",
+      "band_color_ko": "회색",
+      "correct_slot_index": 2,
+      "rect": [
+        592,
+        35,
+        188,
+        515
+      ],
+      "content_rect": [
+        600,
+        43,
+        172,
+        499
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        172,
+        499
+      ],
+      "anchor_in_rect": [
+        94.0,
+        507
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    },
+    {
+      "id": "300",
+      "name_ko": "사회과학",
+      "band_color_ko": "주황",
+      "correct_slot_index": 3,
+      "rect": [
+        862,
+        35,
+        188,
+        515
+      ],
+      "content_rect": [
+        870,
+        43,
+        172,
+        499
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        172,
+        499
+      ],
+      "anchor_in_rect": [
+        94.0,
+        507
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    },
+    {
+      "id": "400",
+      "name_ko": "자연과학",
+      "band_color_ko": "갈색",
+      "correct_slot_index": 4,
+      "rect": [
+        1130,
+        34,
+        189,
+        516
+      ],
+      "content_rect": [
+        1138,
+        42,
+        173,
+        500
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        173,
+        500
+      ],
+      "anchor_in_rect": [
+        94.5,
+        508
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    },
+    {
+      "id": "500",
+      "name_ko": "기술과학",
+      "band_color_ko": "하늘색",
+      "correct_slot_index": 5,
+      "rect": [
+        61,
+        599,
+        190,
+        517
+      ],
+      "content_rect": [
+        69,
+        607,
+        174,
+        501
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        174,
+        501
+      ],
+      "anchor_in_rect": [
+        95.0,
+        509
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    },
+    {
+      "id": "600",
+      "name_ko": "예술",
+      "band_color_ko": "노랑",
+      "correct_slot_index": 6,
+      "rect": [
+        322,
+        599,
+        191,
+        517
+      ],
+      "content_rect": [
+        330,
+        607,
+        175,
+        501
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        175,
+        501
+      ],
+      "anchor_in_rect": [
+        95.5,
+        509
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    },
+    {
+      "id": "700",
+      "name_ko": "언어",
+      "band_color_ko": "연두",
+      "correct_slot_index": 7,
+      "rect": [
+        591,
+        600,
+        190,
+        516
+      ],
+      "content_rect": [
+        599,
+        608,
+        174,
+        500
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        174,
+        500
+      ],
+      "anchor_in_rect": [
+        95.0,
+        508
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    },
+    {
+      "id": "800",
+      "name_ko": "문학",
+      "band_color_ko": "진한 파랑",
+      "correct_slot_index": 8,
+      "rect": [
+        861,
+        600,
+        190,
+        516
+      ],
+      "content_rect": [
+        869,
+        608,
+        174,
+        500
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        174,
+        500
+      ],
+      "anchor_in_rect": [
+        95.0,
+        508
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    },
+    {
+      "id": "900",
+      "name_ko": "역사",
+      "band_color_ko": "보라",
+      "correct_slot_index": 9,
+      "rect": [
+        1129,
+        600,
+        190,
+        516
+      ],
+      "content_rect": [
+        1137,
+        608,
+        174,
+        500
+      ],
+      "content_in_rect": [
+        8,
+        8,
+        174,
+        500
+      ],
+      "anchor_in_rect": [
+        95.0,
+        508
+      ],
+      "label_baked_into_sprite": true,
+      "file": "books-atlas.webp"
+    }
+  ],
+  "render_note_ko": "각 content_rect를 독립 책으로 렌더링합니다. 책 10권 모두 목적지 크기를 동일하게 맞추며, 시트를 통째로 화면에 표시하지 않습니다. 분류명은 이미 이미지에 포함되어 있습니다."
+}

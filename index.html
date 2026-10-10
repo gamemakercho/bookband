@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#291d27">
+  <meta name="description" content="고양이 사서와 함께 책 10권을 올바른 순서로 꽂아 주세요.">
+  <title>책을 올바른 순서로 제자리에!</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main id="game" aria-label="책을 올바른 순서로 제자리에!">
+    <canvas id="board" width="941" height="1672" aria-label="북카트의 책을 중간 서가에 꽂는 게임. 책을 끌거나, 책과 빈자리를 차례로 누르세요."></canvas>
+    <div id="message" role="status" aria-live="polite"></div>
+    <div id="loading" class="overlay"><section class="card"><div class="eyebrow">고양이 사서의 도서관</div><h1>서가를 준비하고 있어요</h1><p id="load-text">책과 북카트를 불러오는 중…</p><button id="retry" hidden>다시 불러오기</button></section></div>
+    <div id="intro" class="overlay" hidden><section class="card"><div class="eyebrow">고양이 사서의 부탁</div><h1>뒤바뀐 영혼,<br>뒤섞인 책들</h1><p>사서와 고양이의 영혼이 뒤바뀌었어요.<br>고양이가 된 사서를 도와주세요.</p><p id="start-text"></p><button id="start">책 정리 시작</button><small>시간제한 없이, 천천히 살펴보세요.</small></section></div>
+    <nav class="tools" aria-label="게임 도움"><button id="help" aria-label="조작 방법 보기">도움말</button><button id="restart" aria-label="책 배열을 초기화하고 다시 시작">다시 시작</button></nav>
+    <dialog id="help-dialog"><section class="card"><h2>고양이 앞발로 정리해요</h2><p>책을 끌어 빈자리에 놓으세요.<br>책을 누른 뒤 빈자리를 눌러도 돼요.</p><p>서가의 두 책을 차례로 누르면 자리가 바뀌어요. 카트로 끌어 빼거나, 책을 선택한 뒤 카트의 빈 공간을 눌러 돌려놓을 수도 있어요.</p><p>같은 책이나 배경을 누르면 선택이 취소돼요. 서가 밖이나 다른 책 위에 놓으면 원래 자리로 돌아가요.</p><button id="close-help">계속 정리하기</button></section></dialog>
+    <div id="a11y" class="sr-only"></div>
+  </main>
+  <noscript>이 게임을 실행하려면 JavaScript를 켜 주세요.</noscript>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "design_size": [
+    941,
+    1672
+  ],
+  "background": "assets/library-background.webp",
+  "header_title_center": [
+    560,
+    74
+  ],
+  "header_title_max_width": 630,
+  "header_subtitle_center": [
+    558,
+    133
+  ],
+  "sign_label_center": [
+    470,
+    548
+  ],
+  "sign_max_width": 320,
+  "shelf": {
+    "left": 74,
+    "right": 869,
+    "baseline": 833,
+    "book_height": 237,
+    "slot_count": 10,
+    "slot_width": 79.5,
+    "number_baseline": 889,
+    "drop_rect": [
+      65,
+      570,
+      814,
+      278
+    ]
+  },
+  "cart": {
+    "dest_content_rect": [
+      66,
+      1036,
+      809,
+      557
+    ],
+    "hit_rect": [
+      64,
+      951,
+      812,
+      620
+    ],
+    "tray_baselines": [
+      1083,
+      1260,
+      1457
+    ]
+  },
+  "footer_center": [
+    470,
+    1634
+  ],
+  "footer_max_width": 760,
+  "idle_paws": {
+    "left_dest": [
+      -60,
+      1530,
+      190,
+      145
+    ],
+    "right_dest": [
+      811,
+      1530,
+      190,
+      145
+    ],
+    "clip_to_viewport": true,
+    "visible_clip_rects": [
+      [
+        0,
+        1480,
+        67,
+        192
+      ],
+      [
+        874,
+        1480,
+        67,
+        192
+      ]
+    ]
+  },
+  "held_book_size": [
+    79.5,
+    237
+  ],
+  "cart_book_samples": [
+    {
+      "center": [
+        166,
+        999
+      ],
+      "size": [
+        61,
+        164
+      ],
+      "rotation_deg": -5
+    },
+    {
+      "center": [
+        263,
+        1004
+      ],
+      "size": [
+        59,
+        158
+      ],
+      "rotation_deg": 4
+    },
+    {
+      "center": [
+        363,
+        1001
+      ],
+      "size": [
+        56,
+        164
+      ],
+      "rotation_deg": -3
+    },
+    {
+      "center": [
+        619,
+        1064
+      ],
+      "size": [
+        39,
+        168
+      ],
+      "rotation_deg": -90
+    },
+    {
+      "center": [
+        619,
+        1026
+      ],
+      "size": [
+        36,
+        173
+      ],
+      "rotation_deg": -90
+    },
+    {
+      "center": [
+        270,
+        1240
+      ],
+      "size": [
+        38,
+        186
+      ],
+      "rotation_deg": -90
+    },
+    {
+      "center": [
+        268,
+        1204
+      ],
+      "size": [
+        34,
+        179
+      ],
+      "rotation_deg": -90
+    },
+    {
+      "center": [
+        266,
+        1171
+      ],
+      "size": [
+        32,
+        172
+      ],
+      "rotation_deg": -90
+    },
+    {
+      "center": [
+        622,
+        1199
+      ],
+      "size": [
+        57,
+        121
+      ],
+      "rotation_deg": 9
+    },
+    {
+      "center": [
+        707,
+        1198
+      ],
+      "size": [
+        61,
+        123
+      ],
+      "rotation_deg": -7
+    }
+  ],
+  "swap": {
+    "show_cart": false,
+    "show_paws": false,
+    "swap_duration_ms": 0,
+    "flash_duration_ms": 70
+  },
+  "reshelve": {
+    "show_cart": true,
+    "show_paws": true
+  },
+  "sparkle": {
+    "duration_ms": 1400,
+    "particle_count": 16,
+    "colors": [
+      "#fff7bd",
+      "#ffe184",
+      "#ffffff"
+    ]
+  },
+  "note_ko": "좌표는 941×1672 기준입니다. 전체를 한 좌표계로 비례 확대/축소하고 pointer 위치를 역변환합니다. 배경에 글씨가 없으므로 제목·팻말·번호·안내는 코드로 한 번만 그립니다. 카트 샘플은 책 id가 아니라 무작위 책을 넣을 위치 예시입니다."
+}
