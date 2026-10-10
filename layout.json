@@ -262,6 +262,6 @@
   "grip_paws": {
     "width": 135,
     "book_overlap": 6,
-    "y_offset": 30
+    "anchor_y_ratio": 0.44
   }
 }

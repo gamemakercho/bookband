@@ -105,19 +105,25 @@ export function drawIdlePaws(ctx, bundle, hideSide = null) {
     ctx.restore();
   });
 }
-export function drawGripPaws(ctx, bundle, bookPlacement) {
-  if (!bundle.pawImage) return;
+export function gripPlacement(bundle, bookPlacement) {
   const [cx, cy] = bookPlacement.center;
-  const [bw] = bookPlacement.size;
+  const [bw,bh] = bookPlacement.size;
   const settings=bundle.layout.grip_paws||{};
-  const width=settings.width||135,overlap=settings.book_overlap||6,y=cy+(settings.y_offset||30);
+  const width=settings.width||135,overlap=settings.book_overlap??6;
   const side = bookPlacement.grip_side || (cx >= 470.5 ? "right" : "left");
-  drawIdlePaws(ctx, bundle, side);
-  const rect=bundle.pawFrames.get("grip_"+side).content_rect;
+  const frame=bundle.pawFrames.get("grip_"+side),rect=frame.content_rect;
+  const contact=frame.grip_anchor_in_content;
   const height=width*rect[3]/rect[2];
   const x=side==='left'?cx-bw/2-width+overlap:cx+bw/2-overlap;
+  const y=cy+bh*(settings.anchor_y_ratio??.44)-contact[1]*width/rect[2];
+  return {side,rect,dest:[x,y,width,height],anchor:[x+contact[0]*width/rect[2],cy+bh*(settings.anchor_y_ratio??.44)]};
+}
+export function drawGripPaws(ctx, bundle, bookPlacement) {
+  if (!bundle.pawImage) return;
+  const grip=gripPlacement(bundle,bookPlacement);
+  drawIdlePaws(ctx, bundle, grip.side);
   // Render the original hand and wrist at their natural aspect ratio. No stretched forearm.
-  drawSprite(ctx,bundle.pawImage,rect,[x,y,width,height]);
+  drawSprite(ctx,bundle.pawImage,grip.rect,grip.dest);
 }
 function textFit(ctx, text, x, y, initial, maxWidth, color="#fff1b4") {
   let size=initial;

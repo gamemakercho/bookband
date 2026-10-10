@@ -1,5 +1,5 @@
 import {CONFIG} from './config.js';
-import {loadAssetBundle,drawBook,drawBookGlow,drawCart,drawCartForeground,drawIdlePaws,drawGripPaws} from './assets-loader.js';
+import {loadAssetBundle,drawBook,drawBookGlow,drawCart,drawCartForeground,drawIdlePaws,drawGripPaws,gripPlacement} from './assets-loader.js';
 import {freshState,validState,locate,transition,shelfDropPlan} from './state.js';
 import {inside,localPoint,slotAt,shelfPlacement,cartPlacements} from './geometry.js';
 
@@ -8,7 +8,7 @@ const message=document.querySelector('#message'),intro=document.querySelector('#
 const loading=document.querySelector('#loading'),help=document.querySelector('#help-dialog');
 const order=CONFIG.correctOrder;
 let bundle,state,selected=null,gesture=null,ready=false,started=false,completeTimer=null,animation=null,epoch=0;
-let bookMasks=new Map(),cartMask=null,completionSent=false,completionStart=0;
+let bookMasks=new Map(),pawMasks=new Map(),cartMask=null,completionSent=false,completionStart=0;
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.querySelector('#start-text').textContent=CONFIG.text.start;
 
@@ -34,12 +34,18 @@ function placement(id) {const p=locate(state,id);return p.zone==='shelf'?shelfPl
 function heldPlacement() {
   if(!selected&&!gesture?.dragging)return null;
   const id=gesture?.dragging?gesture.book:selected.id;
-  const base=gesture?.dragging?gesture.point:placement(id).center;
+  const side=gesture?.dragging?gesture.side:selected.side;
   const [w,h]=bundle.layout.held_book_size;
-  return {center:[Math.max(w/2,Math.min(941-w/2,base[0])),Math.max(h/2,Math.min(1672-h/2,base[1]))],size:[w,h],grip_side:gesture?.dragging?gesture.side:selected.side,rotation_deg:0};
+  const anchor=gripPlacement(bundle,{center:[0,0],size:[w,h],grip_side:side}).anchor;
+  // The fingertip follows the lower paw contact, keeping the title above the finger.
+  const base=gesture?.dragging?[gesture.point[0]-anchor[0],gesture.point[1]-anchor[1]]:placement(id).center;
+  return {center:[Math.max(w/2,Math.min(941-w/2,base[0])),Math.max(h/2,Math.min(1672-h/2,base[1]))],size:[w,h],grip_side:side,rotation_deg:0};
 }
 function hitBook(p,includeHeld=true) {
-  if(includeHeld&&selected) {const q=heldPlacement();if(inside(localPoint(p,q),[0,0,...q.size]))return selected.id;}
+  if(includeHeld&&selected) {
+    const q=heldPlacement(),grip=gripPlacement(bundle,q),[x,y,w,h]=grip.dest;
+    if(inside(localPoint(p,q),[0,0,...q.size])||opaque(pawMasks.get(grip.side),[p[0]-x,p[1]-y],[w,h]))return selected.id;
+  }
   // Shelf hit regions include the full spine, even transparent rounded corners.
   for(let i=0;i<order.length;i++)if(state.shelf[i]) {const q=shelfPlacement(bundle.layout,i);if(inside(localPoint(p,q),[0,0,...q.size]))return state.shelf[i];}
   const r=bundle.layout.cart.dest_content_rect;
@@ -88,13 +94,16 @@ canvas.addEventListener('pointermove',e=>{
 });
 canvas.addEventListener('pointerup',e=>{
   if(!gesture||e.pointerId!==gesture.pointerId)return;
-  e.preventDefault();const g=gesture,p=toPoint(e);gesture=null;
+  e.preventDefault();const g=gesture,p=toPoint(e);g.point=p;
+  const dropPoint=g.dragging?heldPlacement().center:p;
+  gesture=null;
   if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
   if(!active()){clearInteraction();return;}
   if(g.dragging) {
-    const index=slotAt(p,bundle.layout);
+    if(!inside(p,[0,0,941,1672])){clearInteraction();return;}
+    const index=slotAt(dropPoint,bundle.layout);
     if(index>=0)commit({type:'move',id:g.book,zone:'shelf',index});
-    else if(inside(p,bundle.layout.cart.hit_rect))commit({type:'move',id:g.book,zone:'cart'});
+    else if(inside(dropPoint,bundle.layout.cart.hit_rect))commit({type:'move',id:g.book,zone:'cart'});
     else clearInteraction();
   }else if(Math.hypot(e.clientX-g.startCss[0],e.clientY-g.startCss[1])<CONFIG.dragThresholdCss)tap(p,hitBook(p));
   else clearInteraction();
@@ -127,11 +136,13 @@ function render(now=performance.now()) {
   ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.setTransform(canvas.width/941,0,0,canvas.height/1672,0,0);
   const l=bundle.layout;ctx.imageSmoothingEnabled=false;ctx.drawImage(bundle.background,0,0,941,1672);
+  // Shelf labels belong to the scenery, behind the movable book and gripping paw.
+  for(let i=0;i<order.length;i++)fit(String(i+1),shelfPlacement(l,i).center[0],l.shelf.number_baseline-10,28,60,'#392517');
   const heldId=gesture?.dragging?gesture.book:selected?.id;
   state.shelf.forEach((id,i)=>{if(id&&id!==heldId)drawBook(ctx,bundle,id,shelfPlacement(l,i));});
   if(heldId) {
     for(let i=0;i<order.length;i++)if(!state.shelf[i]) {const q=shelfPlacement(l,i);ctx.fillStyle='#fff2c615';ctx.fillRect(q.center[0]-q.size[0]/2,q.center[1]-q.size[1]/2,...q.size);}
-    if(gesture?.dragging){const n=slotAt(gesture.point,l);if(n>=0&&shelfDropPlan(state,heldId,n))outline(shelfPlacement(l,n));}
+    if(gesture?.dragging){const n=slotAt(heldPlacement().center,l);if(n>=0&&shelfDropPlan(state,heldId,n))outline(shelfPlacement(l,n));}
   }
   drawCart(ctx,bundle);
   const positions=cartPositions(),cssScale=canvas.getBoundingClientRect().width/941;
@@ -148,7 +159,6 @@ function render(now=performance.now()) {
   fit(CONFIG.text.title.slice(split+1),hx,hy+23,46,l.header_title_max_width);
   fit(CONFIG.text.subtitle,...l.header_subtitle_center,25,l.header_title_max_width,'#ffd0eb');
   fit(CONFIG.text.sign,...l.sign_label_center,38,l.sign_max_width,'#23263b');
-  for(let i=0;i<order.length;i++)fit(String(i+1),shelfPlacement(l,i).center[0],l.shelf.number_baseline-10,28,60,'#392517');
   fit(CONFIG.text.footer,...l.footer_center,27,l.footer_max_width,'#ffdaeb');
   message.classList.toggle('complete',state.complete);
   message.textContent=state.complete?CONFIG.text.complete:state.shelf.every(Boolean)?CONFIG.text.incorrect:'';
@@ -199,6 +209,7 @@ try {
   bundle=await loadAssetBundle('reshelve');
   if(order.length!==bundle.layout.shelf.slot_count||new Set(order).size!==order.length||!order.every(id=>bundle.bookFrames.has(id))||bundle.layout.cart_book_samples.length!==order.length)throw new Error('책 또는 배치 데이터가 맞지 않습니다.');
   for(const id of order)bookMasks.set(id,maskFor(bundle.bookImage,bundle.bookFrames.get(id).content_rect,true));
+  for(const side of ['left','right'])pawMasks.set(side,maskFor(bundle.pawImage,bundle.pawFrames.get('grip_'+side).content_rect));
   cartMask=maskFor(bundle.cartImage,bundle.cart.content_rect);
   const restored=readSave();state=restored||freshState(order,CONFIG.gameId);started=!!restored;completionSent=!!restored?.complete;completionStart=performance.now()-bundle.layout.sparkle.duration_ms;
   loading.hidden=true;intro.hidden=started;ready=true;render();syncAccess();
