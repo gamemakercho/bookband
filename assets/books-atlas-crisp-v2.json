@@ -1,6 +1,7 @@
 {
   "schema_version": 2,
-  "image": "books-atlas-crisp-v2.png",
+  "image": "books-atlas-crisp-v2.webp",
+  "png_fallback": "books-atlas-crisp-v2.png",
   "canvas_size": [
     1374,
     1145
@@ -35,7 +36,7 @@
         519
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     },
     {
       "id": "100",
@@ -65,7 +66,7 @@
         519
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     },
     {
       "id": "200",
@@ -95,7 +96,7 @@
         519
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     },
     {
       "id": "300",
@@ -125,7 +126,7 @@
         519
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     },
     {
       "id": "400",
@@ -155,7 +156,7 @@
         519
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     },
     {
       "id": "500",
@@ -185,7 +186,7 @@
         517
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     },
     {
       "id": "600",
@@ -215,7 +216,7 @@
         516
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     },
     {
       "id": "700",
@@ -245,7 +246,7 @@
         516
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     },
     {
       "id": "800",
@@ -275,7 +276,7 @@
         517
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     },
     {
       "id": "900",
@@ -305,8 +306,8 @@
         517
       ],
       "label_baked_into_sprite": true,
-      "file": "books-atlas-crisp-v2.png"
+      "file": "books-atlas-crisp-v2.webp"
     }
   ],
-  "render_note_ko": "새 PNG와 이 JSON을 한 쌍으로 사용합니다. 기존 books-atlas.json의 좌표는 재사용하지 마세요. 분류명은 이미지에 이미 있으므로 중복 표시하지 않습니다. 각 content_rect를 직접 목적지 해상도에 그리며, 책 축소 시 고품질 보간과 DPR을 적용합니다."
+  "render_note_ko": "새 PNG에서 만든 무손실 WebP와 이 JSON을 한 쌍으로 사용하며 PNG는 로드 실패 시 대체합니다. 두 이미지의 크기와 좌표는 동일합니다. 기존 books-atlas.json의 좌표는 재사용하지 마세요. 분류명은 이미지에 이미 있으므로 중복 표시하지 않습니다. 각 content_rect를 직접 목적지 해상도에 그리며, 책 축소 시 고품질 보간과 DPR을 적용합니다."
 }

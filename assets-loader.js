@@ -27,7 +27,7 @@ export async function loadAssetBundle(mode = "reshelve") {
   const [layout, books, background, bookImage] = await Promise.all([
     readJson("layout.json"), readJson("assets/books-atlas-crisp-v2.json"),
     readImage("assets/library-background.webp", "assets/library-background.png"),
-    readImage("assets/books-atlas-crisp-v2.png")
+    readImage("assets/books-atlas-crisp-v2.webp", "assets/books-atlas-crisp-v2.png")
   ]);
   const bundle = { mode, layout, books, background, bookImage,
     bookFrames: new Map(books.frames.map(frame => [frame.id, frame])) };
