@@ -137,7 +137,7 @@ export function drawUi(ctx, bundle) {
   textFit(ctx,"실제 서가의 책띠를 살펴보세요",560,139,25,630,"#ffc7ea");
   textFit(ctx,"신간도서 코너",470,565,38,320,"#18243f");
   const s=bundle.layout.shelf;
-  for(let i=0;i<10;i++)textFit(ctx,String(i+1),s.left+(i+.5)*(s.right-s.left)/10,s.number_baseline,28,60,"#18130d");
+  for(let i=0;i<10;i++)textFit(ctx,String(i),s.left+(i+.5)*(s.right-s.left)/10,s.number_baseline,28,60,"#18130d");
   const footer=bundle.mode==="reshelve"?"끌어서 꽂기 · 찬 자리에는 밀어 넣기":"두 책을 차례로 누르면 자리가 바뀌어요";
   textFit(ctx,footer,470,1647,27,760,"#ffd7ee");
 }
