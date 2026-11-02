@@ -80,26 +80,28 @@ function tap(p,hit=hitBook(p)) {
   }
   selected=null;render();syncAccess();
 }
-canvas.addEventListener('pointerdown',e=>{
-  if(!active()||gesture||e.isPrimary===false||e.button!==0)return;
-  e.preventDefault();const point=toPoint(e),book=hitBook(point);
-  gesture={pointerId:e.pointerId,book,point,start:point,startCss:[e.clientX,e.clientY],side:selected?.id===book?selected.side:(point[0]<470.5?'left':'right'),dragging:false};
-  canvas.setPointerCapture(e.pointerId);
-});
-canvas.addEventListener('pointermove',e=>{
-  if(!gesture||e.pointerId!==gesture.pointerId)return;
-  e.preventDefault();gesture.point=toPoint(e);
+// One interaction pipeline. Finger input uses native Touch Events, including
+// browsers/WebViews which do not reliably deliver canvas Pointer Events.
+function beginGesture(e,source){
+  if(!active()||gesture)return false;
+  const point=toPoint(e),book=hitBook(point);
+  gesture={pointerId:e.pointerId,source,book,point,start:point,startCss:[e.clientX,e.clientY],side:selected?.id===book?selected.side:(point[0]<470.5?'left':'right'),dragging:false};
+  return true;
+}
+function moveGesture(e,source){
+  if(!gesture||gesture.source!==source||e.pointerId!==gesture.pointerId)return;
+  gesture.point=toPoint(e);
   if(gesture.book&&!gesture.dragging&&Math.hypot(e.clientX-gesture.startCss[0],e.clientY-gesture.startCss[1])>=CONFIG.dragThresholdCss){gesture.dragging=true;selected=null;}
   if(gesture.dragging)render();
-});
-canvas.addEventListener('pointerup',e=>{
-  if(!gesture||e.pointerId!==gesture.pointerId)return;
-  e.preventDefault();const g=gesture,p=toPoint(e);g.point=p;
+}
+function endGesture(e,source){
+  if(!gesture||gesture.source!==source||e.pointerId!==gesture.pointerId)return;
+  const g=gesture,p=toPoint(e);g.point=p;
   const dropPoint=g.dragging?heldPlacement().center:p;
   gesture=null;
-  if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
+  if(source==='pointer'&&canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
   if(!active()){clearInteraction();return;}
-  if(g.dragging) {
+  if(g.dragging){
     if(!inside(p,[0,0,941,1672])){clearInteraction();return;}
     const index=slotAt(dropPoint,bundle.layout);
     if(index>=0)commit({type:'move',id:g.book,zone:'shelf',index});
@@ -107,9 +109,29 @@ canvas.addEventListener('pointerup',e=>{
     else clearInteraction();
   }else if(Math.hypot(e.clientX-g.startCss[0],e.clientY-g.startCss[1])<CONFIG.dragThresholdCss)tap(p,hitBook(p));
   else clearInteraction();
+}
+canvas.addEventListener('pointerdown',e=>{
+  if(e.pointerType==='touch'||e.isPrimary===false||e.button!==0)return;
+  if(!beginGesture(e,'pointer'))return;e.preventDefault();canvas.setPointerCapture(e.pointerId);
 });
-canvas.addEventListener('pointercancel',cancelGesture);
-canvas.addEventListener('lostpointercapture',cancelGesture);
+canvas.addEventListener('pointermove',e=>{if(gesture?.source!=='pointer')return;e.preventDefault();moveGesture(e,'pointer');});
+canvas.addEventListener('pointerup',e=>{if(gesture?.source!=='pointer')return;e.preventDefault();endGesture(e,'pointer');});
+for(const type of ['pointercancel','lostpointercapture'])canvas.addEventListener(type,e=>{if(gesture?.source==='pointer')cancelGesture(e);});
+const touchPoint=touch=>({pointerId:touch.identifier,clientX:touch.clientX,clientY:touch.clientY});
+const activeTouch=e=>Array.from(e.changedTouches).find(t=>t.identifier===gesture?.pointerId);
+canvas.addEventListener('touchstart',e=>{
+  if(e.touches.length!==1||!e.changedTouches.length)return;
+  if(beginGesture(touchPoint(e.changedTouches[0]),'touch')&&e.cancelable)e.preventDefault();
+},{passive:false});
+canvas.addEventListener('touchmove',e=>{
+  if(gesture?.source!=='touch')return;const touch=activeTouch(e);if(!touch)return;
+  if(e.cancelable)e.preventDefault();moveGesture(touchPoint(touch),'touch');
+},{passive:false});
+canvas.addEventListener('touchend',e=>{
+  if(gesture?.source!=='touch')return;const touch=activeTouch(e);if(!touch)return;
+  if(e.cancelable)e.preventDefault();endGesture(touchPoint(touch),'touch');
+},{passive:false});
+canvas.addEventListener('touchcancel',e=>{if(gesture?.source==='touch'&&(!e.changedTouches.length||activeTouch(e)))cancelGesture();},{passive:false});
 window.addEventListener('blur',()=>{if(ready)clearInteraction();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&ready)clearInteraction();});
 
